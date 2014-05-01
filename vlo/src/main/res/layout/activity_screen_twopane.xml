@@ -8,7 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="pl.krakow.vlo.ScreenListActivity">
+    tools:context="pl.krakow.vlo.ui.ScreenListActivity">
 
     <!--
     This layout is a two-pane layout for the Screens
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/screen_list"
-        android:name="pl.krakow.vlo.ScreenListFragment"
+        android:name="pl.krakow.vlo.ui.ScreenListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

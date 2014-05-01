@@ -1,4 +1,4 @@
-package pl.krakow.vlo.dummy;
+package pl.krakow.vlo.ui.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

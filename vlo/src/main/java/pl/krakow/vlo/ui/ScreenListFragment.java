@@ -1,4 +1,4 @@
-package pl.krakow.vlo;
+package pl.krakow.vlo.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,12 +7,12 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import pl.krakow.vlo.dummy.DummyContent;
+import pl.krakow.vlo.R;
+import pl.krakow.vlo.ui.dummy.DummyContent;
 
 /**
  * A list fragment representing a list of Screens. This fragment

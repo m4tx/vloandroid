@@ -1,8 +1,10 @@
-package pl.krakow.vlo;
+package pl.krakow.vlo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
+import pl.krakow.vlo.R;
 
 
 /**

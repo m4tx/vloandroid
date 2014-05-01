@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="pl.krakow.vlo.ScreenListActivity"
+            android:name=".ui.ScreenListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,9 +17,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pl.krakow.vlo.ScreenDetailActivity"
+            android:name=".ui.ScreenDetailActivity"
             android:label="@string/title_screen_detail"
-            android:parentActivityName="pl.krakow.vlo.ScreenListActivity" >
+            android:parentActivityName=".ui.ScreenListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.krakow.vlo.ScreenListActivity" />

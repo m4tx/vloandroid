@@ -1,4 +1,4 @@
-package pl.krakow.vlo;
+package pl.krakow.vlo.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import pl.krakow.vlo.dummy.DummyContent;
+import pl.krakow.vlo.R;
+import pl.krakow.vlo.ui.dummy.DummyContent;
 
 /**
  * A fragment representing a single Screen detail screen.
