@@ -4,4 +4,6 @@
     <string name="app_name">VLO</string>
     <string name="title_screen_detail">Screen Detail</string>
 
+    <string name="screen_connection_title">Internet connection</string>
+
 </resources>

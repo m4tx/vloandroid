@@ -40,8 +40,8 @@ public class ScreenDetailActivity extends FragmentActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ScreenDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ScreenDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ScreenDetailFragment.ARG_ITEM_POS,
+                    getIntent().getStringExtra(ScreenDetailFragment.ARG_ITEM_POS));
             ScreenDetailFragment fragment = new ScreenDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

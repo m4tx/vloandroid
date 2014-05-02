@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.ui.dummy.DummyContent;
+import pl.krakow.vlo.ui.screens.Screen;
+import pl.krakow.vlo.ui.screens.Screens;
 
 /**
  * A fragment representing a single Screen detail screen.
@@ -21,12 +23,12 @@ public class ScreenDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_POS = "item_pos";
 
     /**
-     * The dummy content this fragment is presenting.
+     * The screen that this fragment is currently presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private Screen currentScreen;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -39,24 +41,18 @@ public class ScreenDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        if (getArguments().containsKey(ARG_ITEM_POS)) {
+            currentScreen = Screens.getScreens().get(getArguments().getInt(ARG_ITEM_POS));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_screen_detail, container, false);
-
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.screen_detail)).setText(mItem.content);
+        if (currentScreen != null) {
+            currentScreen.createView(inflater, container, savedInstanceState);
         }
 
-        return rootView;
+        return null;
     }
 }

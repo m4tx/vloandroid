@@ -13,13 +13,15 @@ import android.widget.TextView;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.ui.dummy.DummyContent;
+import pl.krakow.vlo.ui.screens.Header;
+import pl.krakow.vlo.ui.screens.Screens;
 
 /**
  * A list fragment representing a list of Screens. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a {@link ScreenDetailFragment}.
- * <p>
+ * <p/>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
@@ -51,7 +53,7 @@ public class ScreenListFragment extends ListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(int position);
     }
 
     /**
@@ -60,7 +62,7 @@ public class ScreenListFragment extends ListFragment {
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(int position) {
         }
     };
 
@@ -78,12 +80,12 @@ public class ScreenListFragment extends ListFragment {
         setListAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return 10;
+                return Screens.getScreens().size();
             }
 
             @Override
             public Object getItem(int i) {
-                return i;
+                return Screens.getScreens().get(i);
             }
 
             @Override
@@ -93,15 +95,13 @@ public class ScreenListFragment extends ListFragment {
 
             @Override
             public View getView(int i, View view, ViewGroup viewGroup) {
-                View v = ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(i % 3 == 0 ? R.layout.list_header : android.R.layout.simple_list_item_1, viewGroup, false);
-                ((TextView)v.findViewById(android.R.id.text1)).setText("test");
-                return v;
+                return Screens.getScreens().get(i).getListItemView((LayoutInflater) getActivity()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE), viewGroup);
             }
 
             @Override
             public boolean isEnabled(int position) {
-                return position % 3 != 0;
+                return !(Screens.getScreens().get(position) instanceof Header);
             }
         });
     }
@@ -143,7 +143,7 @@ public class ScreenListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(position);
     }
 
     @Override
