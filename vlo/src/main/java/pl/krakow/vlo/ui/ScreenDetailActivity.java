@@ -43,6 +43,7 @@ public class ScreenDetailActivity extends FragmentActivity {
             Screen screen = Screens.getScreens().get(getIntent().getIntExtra(ScreenListActivity
                     .ARG_ITEM_POS, -1));
             assert screen instanceof Fragment; // Every clickable Screen should be a Fragment
+            setTitle(screen.getNameResId());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.screen_detail_container, (Fragment) screen)
                     .commit();
