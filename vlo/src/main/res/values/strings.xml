@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VLO</string>
-    <string name="app_title">V Liceum</string>
+    <string name="app_name">V LO</string>
+    <string name="app_title">V LO</string>
 
     <string name="screen_connection_title">Internet connection</string>
     <string name="screen_section_lessons">Lessons</string>
