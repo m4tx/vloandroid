@@ -2,9 +2,12 @@ package pl.krakow.vlo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import pl.krakow.vlo.R;
+import pl.krakow.vlo.ui.screens.Screen;
+import pl.krakow.vlo.ui.screens.Screens;
 
 
 /**
@@ -14,17 +17,19 @@ import pl.krakow.vlo.R;
  * lead to a {@link ScreenDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
- * <p>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link ScreenListFragment} and the item details
- * (if present) is a {@link ScreenDetailFragment}.
- * <p>
+ * <p/>
  * This activity also implements the required
  * {@link ScreenListFragment.Callbacks} interface
  * to listen for item selections.
  */
 public class ScreenListActivity extends FragmentActivity
         implements ScreenListFragment.Callbacks {
+
+    /**
+     * The fragment argument representing the item ID that this fragment
+     * represents.
+     */
+    public static final String ARG_ITEM_POS = "item_pos";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -64,19 +69,17 @@ public class ScreenListActivity extends FragmentActivity
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putInt(ScreenDetailFragment.ARG_ITEM_POS, position);
-            ScreenDetailFragment fragment = new ScreenDetailFragment();
-            fragment.setArguments(arguments);
+            Screen screen = Screens.getScreens().get(position);
+            assert screen instanceof Fragment; // Every clickable Screen should be a Fragment
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.screen_detail_container, fragment)
+                    .replace(R.id.screen_detail_container, (Fragment) screen)
                     .commit();
 
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, ScreenDetailActivity.class);
-            detailIntent.putExtra(ScreenDetailFragment.ARG_ITEM_POS, position);
+            detailIntent.putExtra(ARG_ITEM_POS, position);
             startActivity(detailIntent);
         }
     }

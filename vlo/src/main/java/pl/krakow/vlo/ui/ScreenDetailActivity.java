@@ -1,12 +1,13 @@
 package pl.krakow.vlo.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import pl.krakow.vlo.R;
+import pl.krakow.vlo.ui.screens.Screen;
+import pl.krakow.vlo.ui.screens.Screens;
 
 /**
  * An activity representing a single Screen detail screen. This
@@ -15,7 +16,7 @@ import pl.krakow.vlo.R;
  * in a {@link ScreenListActivity}.
  * <p>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link ScreenDetailFragment}.
+ * more than a currently chosen Screen.
  */
 public class ScreenDetailActivity extends FragmentActivity {
 
@@ -39,13 +40,11 @@ public class ScreenDetailActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ScreenDetailFragment.ARG_ITEM_POS,
-                    getIntent().getStringExtra(ScreenDetailFragment.ARG_ITEM_POS));
-            ScreenDetailFragment fragment = new ScreenDetailFragment();
-            fragment.setArguments(arguments);
+            Screen screen = Screens.getScreens().get(getIntent().getIntExtra(ScreenListActivity
+                    .ARG_ITEM_POS, -1));
+            assert screen instanceof Fragment; // Every clickable Screen should be a Fragment
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.screen_detail_container, fragment)
+                    .add(R.id.screen_detail_container, (Fragment) screen)
                     .commit();
         }
     }
@@ -54,14 +53,7 @@ public class ScreenDetailActivity extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpTo(this, new Intent(this, ScreenListActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

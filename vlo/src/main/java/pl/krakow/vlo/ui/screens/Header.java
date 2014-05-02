@@ -1,6 +1,5 @@
 package pl.krakow.vlo.ui.screens;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +28,5 @@ public class Header implements Screen {
         TextView tv = (TextView) view.findViewById(android.R.id.content);
         tv.setText(textResId);
         return view;
-    }
-
-    /**
-     * @return this implementation does nothing since the headers are not clickable
-     */
-    @Override
-    public void createView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
     }
 }
