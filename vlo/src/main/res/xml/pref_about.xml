@@ -1,0 +1,6 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <pl.krakow.vlo.ui.settings.AboutPreference
+        android:title="@string/pref_about"/>
+
+</PreferenceScreen>

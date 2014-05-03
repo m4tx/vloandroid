@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.ui.screens.Screen;
 import pl.krakow.vlo.ui.screens.Screens;
+import pl.krakow.vlo.ui.settings.SettingsActivity;
 
 
 /**
@@ -83,5 +86,21 @@ public class ScreenListActivity extends FragmentActivity
             detailIntent.putExtra(ARG_ITEM_POS, position);
             startActivity(detailIntent);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settings = new Intent(this, SettingsActivity.class);
+            startActivity(settings);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

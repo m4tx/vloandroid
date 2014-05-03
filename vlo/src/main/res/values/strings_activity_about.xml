@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_about">About V LO</string>
+    <string name="m4tx_link"><a href="http://m4tx.pl">Mateusz \"m4tx\" Maćkowski</a></string>
+</resources>

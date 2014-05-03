@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.ScreenListActivity"
-            android:label="@string/app_name">
+            android:name="pl.krakow.vlo.ui.ScreenListActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -17,11 +18,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ScreenDetailActivity"
-            android:parentActivityName=".ui.ScreenListActivity">
+            android:name="pl.krakow.vlo.ui.ScreenDetailActivity"
+            android:parentActivityName="pl.krakow.vlo.ui.ScreenListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pl.krakow.vlo.ScreenListActivity"/>
+                android:value="pl.krakow.vlo.ui.ScreenListActivity"/>
+        </activity>
+        <activity
+            android:name="pl.krakow.vlo.ui.settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="pl.krakow.vlo.ui.ScreenListActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.krakow.vlo.ui.ScreenListActivity"/>
+        </activity>
+        <activity
+            android:name="pl.krakow.vlo.ui.settings.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="pl.krakow.vlo.ui.settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.krakow.vlo.ui.settings.SettingsActivity"/>
         </activity>
     </application>
 
