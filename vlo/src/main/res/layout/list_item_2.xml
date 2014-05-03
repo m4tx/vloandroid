@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textAppearance="?android:attr/textAppearanceListItem"
-            android:text="kuźwa"
             />
 
         <TextView
@@ -36,7 +35,6 @@
             android:layout_below="@android:id/text1"
             android:layout_alignStart="@android:id/text1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="fuu"
             />
 
     </LinearLayout>
