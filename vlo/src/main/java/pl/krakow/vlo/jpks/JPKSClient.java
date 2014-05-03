@@ -16,6 +16,17 @@ public class JPKSClient {
     private static final int TIMEOUT = 1000;
 
     private static final String COMMAND_LOGIN = "log";
+    private static final String COMMAND_CLEAR1 = "cle";
+    private static final String COMMAND_CLEAR2 = "rep";
+    private static final String COMMAND_QUESTION = "que";
+    private static final String COMMAND_MESSAGE = "txt";
+    private static final String COMMAND_ANSWER = "lib";
+    private static final String COMMAND_COUNT = "cnt";
+    private static final String COMMAND_IMAGE = "img";
+    private static final String COMMAND_CLEAR_RANKING = "rpr";
+    private static final String COMMAND_APPEND_RANKING = "rnk";
+    private static final String COMMAND_POINT_GOT = "pkt";
+    private static final String COMMAND_REPAINT = "rep";
 
     private static JPKSClient instance;
 
