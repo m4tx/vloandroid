@@ -41,6 +41,7 @@ public class ScreenListActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_list);
+        setTitle(R.string.app_title);
 
         if (findViewById(R.id.screen_detail_container) != null) {
             // The detail container view will be present only in the

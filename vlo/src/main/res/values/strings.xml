@@ -6,4 +6,5 @@
     <string name="screen_connection_title">Internet connection</string>
     <string name="screen_section_lessons">Lessons</string>
     <string name="screen_timetable_title">Timetable</string>
+    <string name="screen_subs_title">Subs</string>
 </resources>

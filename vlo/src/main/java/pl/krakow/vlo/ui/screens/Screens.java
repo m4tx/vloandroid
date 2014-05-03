@@ -20,6 +20,7 @@ public abstract class Screens {
         screens.add(new InternetConnectionScreen());
         screens.add(new Header(R.string.screen_section_lessons));
         screens.add(new TimetableScreen());
+        screens.add(new SubsScreen());
     }
 
     public static ArrayList<Screen> getScreens() {

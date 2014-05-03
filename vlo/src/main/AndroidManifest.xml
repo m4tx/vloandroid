@@ -9,8 +9,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.ScreenListActivity"
-            android:label="@string/app_title">
-            <intent-filter android:label="@string/app_name">
+            android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
