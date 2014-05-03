@@ -21,6 +21,8 @@ public abstract class Screens {
         screens.add(new Header(R.string.screen_section_lessons));
         screens.add(new TimetableScreen());
         screens.add(new SubsScreen());
+        screens.add(new Header(R.string.screen_section_misc));
+        screens.add(new JPKSScreen());
     }
 
     public static ArrayList<Screen> getScreens() {

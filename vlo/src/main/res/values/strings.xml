@@ -10,4 +10,8 @@
     <string name="screen_subs_title">Subs</string>
     <string name="action_settings">Settings</string>
 
+    <string name="screen_section_misc">Misc</string>
+    <string name="screen_jpks_title">JPKS</string>
+    <string name="screen_jpks_disconnected">Disconnected</string>
+
 </resources>
