@@ -34,10 +34,9 @@ public class JPKSScreen extends Fragment implements Screen {
             @Override
             protected Void doInBackground(Void... arg) {
                 new JPKSClient();
-
                 return null;
             }
-        };
+        }.execute();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
