@@ -100,6 +100,10 @@ public class JPKSClient {
         this.commandListener = commandListener;
     }
 
+    public static JPKSClient getInstance() {
+        return instance;
+    }
+
     /**
      * The thread that listens for commands from the server and passes them to proper
      * {@link pl.krakow.vlo.jpks.JPKSCommandListener} set by

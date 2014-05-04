@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:id="@+id/imageView"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageTextView"
+        android:layout_weight="1.0"
+        android:layout_gravity="center_horizontal"
+        android:background="#ffffff"
+        android:scrollbars="vertical"
+        android:maxLines="1000"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Question: who's the man on the picture?"
+        android:id="@+id/questionTextView"
+        android:layout_gravity="center_horizontal"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/questionProgress"
+        android:progress="50"
+        android:background="#ffffff"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff"
+        android:measureWithLargestChild="false">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/messageEditText"
+            android:layout_weight="1"
+            android:hint="Send answer"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/sendButton"
+            android:src="@drawable/ic_send_normal"
+            android:cropToPadding="false"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>
