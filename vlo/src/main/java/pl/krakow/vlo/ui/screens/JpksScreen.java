@@ -20,13 +20,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import pl.krakow.vlo.R;
-import pl.krakow.vlo.jpks.JPKSClient;
-import pl.krakow.vlo.jpks.JPKSCommandListener;
+import pl.krakow.vlo.jpks.JpksClient;
+import pl.krakow.vlo.jpks.JpksCommandListener;
 
 /**
  * Created by m4tx3 on 5/3/14.
  */
-public class JPKSScreen extends Fragment implements Screen, JPKSCommandListener {
+public class JpksScreen extends Fragment implements Screen, JpksCommandListener {
     @Override
     public int getNameResId() {
         return R.string.screen_jpks_title;
@@ -49,23 +49,23 @@ public class JPKSScreen extends Fragment implements Screen, JPKSCommandListener 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (JPKSClient.getInstance() == null) {
+        if (JpksClient.getInstance() == null) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... arg) {
-                    new JPKSClient("android").setCommandListener(JPKSScreen.this);
+                    new JpksClient("android").setCommandListener(JpksScreen.this);
                     return null;
                 }
             }.execute();
         } else {
-            JPKSClient.getInstance().setCommandListener(this);
+            JpksClient.getInstance().setCommandListener(this);
         }
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onDestroy() {
-        JPKSClient client = JPKSClient.getInstance();
+        JpksClient client = JpksClient.getInstance();
         if (client != null) {
             client.setCommandListener(null);
         }
@@ -118,7 +118,7 @@ public class JPKSScreen extends Fragment implements Screen, JPKSCommandListener 
 
     @Override
     public void onImageSent(String imageURL) {
-        imageURL = JPKSClient.IMAGE_URL_PREFIX + imageURL;
+        imageURL = JpksClient.IMAGE_URL_PREFIX + imageURL;
         AsyncTask<String, Void, Bitmap> imageDownloadTask = new AsyncTask<String, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(String... imgurl) {

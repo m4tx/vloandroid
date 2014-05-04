@@ -15,14 +15,14 @@ import java.net.Socket;
  *
  * @see <a href="http://users.v-lo.krakow.pl/~dyrek/jpks/">JPKS Homepage</a>
  */
-public class JPKSClient {
+public class JpksClient {
     /**
      * Prefix used in addition to the filename passed by
-     * {@link pl.krakow.vlo.jpks.JPKSCommandListener#onImageSent(String)} method to download image.
+     * {@link JpksCommandListener#onImageSent(String)} method to download image.
      */
     public static final String IMAGE_URL_PREFIX = "http://users.v-lo.krakow.pl/~dyrek/jpks/img/";
 
-    private static final String LOGGER_TAG = "JPKSClient";
+    private static final String LOGGER_TAG = "JpksClient";
 
     private static final String HOSTNAME = "users.v-lo.krakow.pl";
     private static final int PORT = 6666;
@@ -44,18 +44,18 @@ public class JPKSClient {
     /**
      * Instance of the client that is kept even when the JPKS activity/fragment is closed.
      */
-    private static JPKSClient instance;
+    private static JpksClient instance;
 
     private BufferedReader reader;
     private PrintWriter writer;
-    private JPKSCommandListener commandListener;
+    private JpksCommandListener commandListener;
 
     /**
      * Constructor that connects and logs in to the JPKS server.
      *
      * @param nickname user's nickname
      */
-    public JPKSClient(String nickname) {
+    public JpksClient(String nickname) {
         try {
             Log.v(LOGGER_TAG, "Trying to connect to JPKS: " + HOSTNAME + ":" + PORT);
             Socket sock = new Socket();
@@ -85,29 +85,29 @@ public class JPKSClient {
      */
     public void sendAnswer(String answer) {
         assert answer.length() >= 0 && answer.length() <= 60;
-        String toSend = COMMAND_ANSWER + JPKSStringCoder.encodeString(answer);
+        String toSend = COMMAND_ANSWER + JpksStringCoder.encodeString(answer);
         Log.v(LOGGER_TAG, "Sending message: " + toSend);
         writer.println(toSend);
     }
 
     /**
-     * Sets a {@link pl.krakow.vlo.jpks.JPKSCommandListener} that is notified about every command
+     * Sets a {@link JpksCommandListener} that is notified about every command
      * sent from the server.
      *
-     * @param commandListener {@link pl.krakow.vlo.jpks.JPKSCommandListener} to set
+     * @param commandListener {@link JpksCommandListener} to set
      */
-    public void setCommandListener(JPKSCommandListener commandListener) {
+    public void setCommandListener(JpksCommandListener commandListener) {
         this.commandListener = commandListener;
     }
 
-    public static JPKSClient getInstance() {
+    public static JpksClient getInstance() {
         return instance;
     }
 
     /**
      * The thread that listens for commands from the server and passes them to proper
-     * {@link pl.krakow.vlo.jpks.JPKSCommandListener} set by
-     * {@link #setCommandListener(JPKSCommandListener)} method.
+     * {@link JpksCommandListener} set by
+     * {@link #setCommandListener(JpksCommandListener)} method.
      */
     private class CommandListenerThread extends Thread {
         @Override
@@ -115,7 +115,7 @@ public class JPKSClient {
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
-                    processCommand(JPKSStringCoder.decodeString(line));
+                    processCommand(JpksStringCoder.decodeString(line));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -124,12 +124,12 @@ public class JPKSClient {
 
         /**
          * Processes the command from the server (i.e. passes it to the
-         * {@link pl.krakow.vlo.jpks.JPKSCommandListener}). Does nothing (except logging) when no
+         * {@link JpksCommandListener}). Does nothing (except logging) when no
          * CommandListener is set.
          *
          * @param command the command sent by server. Please note that it should be already
          *                decoded string via the
-         *                {@link pl.krakow.vlo.jpks.JPKSStringCoder#decodeString(String)} method.
+         *                {@link JpksStringCoder#decodeString(String)} method.
          */
         private void processCommand(String command) {
             Log.v(LOGGER_TAG, "Processing command from server: \"" + command + "\"");

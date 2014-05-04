@@ -22,7 +22,7 @@ public abstract class Screens {
         screens.add(new TimetableScreen());
         screens.add(new SubsScreen());
         screens.add(new Header(R.string.screen_section_misc));
-        screens.add(new JPKSScreen());
+        screens.add(new JpksScreen());
     }
 
     public static ArrayList<Screen> getScreens() {

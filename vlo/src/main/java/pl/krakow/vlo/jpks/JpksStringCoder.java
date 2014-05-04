@@ -9,7 +9,7 @@ import static java.util.Map.Entry;
  * The class that is used to encode and decode Strings in "JPKS encoding". It is a simple encoding
  * to allow for using polish diacritics and sending them as ASCII text.
  */
-public abstract class JPKSStringCoder {
+public abstract class JpksStringCoder {
     private static final ArrayList<Entry<String, String>> CODER_MAP = new ArrayList<>();
 
     static {
