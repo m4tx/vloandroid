@@ -137,6 +137,9 @@ public class JpksClient {
                 return;
             }
 
+            if (command.length() < 3) {
+                return;
+            }
             switch (command.substring(0, 3)) {
                 case COMMAND_CLEAR:
                     commandListener.onClearQuestion();
