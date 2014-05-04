@@ -17,8 +17,7 @@ import java.net.Socket;
  */
 public abstract class BaseJpksClient {
     /**
-     * Prefix used in addition to the filename passed by
-     * {@link JpksCommandListener#onImageSent(String)} method to download image.
+     * Prefix used in addition to the filename to download image.
      */
     public static final String IMAGE_URL_PREFIX = "http://users.v-lo.krakow.pl/~dyrek/jpks/img/";
 
