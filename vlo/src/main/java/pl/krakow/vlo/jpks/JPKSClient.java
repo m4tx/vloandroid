@@ -16,16 +16,17 @@ public class JPKSClient {
     private static final int TIMEOUT = 1000;
 
     private static final String COMMAND_LOGIN = "log";
-    private static final String COMMAND_CLEAR = "cle";
+    private static final String COMMAND_ANSWER = "ans";
     private static final String COMMAND_QUESTION = "que";
+    private static final String COMMAND_CORRECT_ANSWER = "lib";
     private static final String COMMAND_MESSAGE = "txt";
-    private static final String COMMAND_ANSWER = "lib";
-    private static final String COMMAND_COUNT = "cnt";
     private static final String COMMAND_IMAGE = "img";
+    private static final String COMMAND_COUNT = "cnt";
     private static final String COMMAND_CLEAR_RANKING = "rpr";
     private static final String COMMAND_APPEND_RANKING = "rnk";
     private static final String COMMAND_POINT_GOT = "pkt";
     private static final String COMMAND_REPAINT = "rep";
+    private static final String COMMAND_CLEAR = "cle";
 
     private static JPKSClient instance;
 
@@ -74,17 +75,15 @@ public class JPKSClient {
 
         private void processCommand(String command) {
             switch (command.substring(0, 3)) {
-                case COMMAND_CLEAR:
-                    break;
                 case COMMAND_QUESTION:
+                    break;
+                case COMMAND_CORRECT_ANSWER:
                     break;
                 case COMMAND_MESSAGE:
                     break;
-                case COMMAND_ANSWER:
+                case COMMAND_IMAGE:
                     break;
                 case COMMAND_COUNT:
-                    break;
-                case COMMAND_IMAGE:
                     break;
                 case COMMAND_CLEAR_RANKING:
                     break;
@@ -93,6 +92,8 @@ public class JPKSClient {
                 case COMMAND_POINT_GOT:
                     break;
                 case COMMAND_REPAINT:
+                    break;
+                case COMMAND_CLEAR:
                     break;
             }
         }

@@ -7,20 +7,20 @@ package pl.krakow.vlo.jpks;
  */
 public interface JPKSCommandListener {
     /**
-     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR1}</code> command is
-     * sent. The client is intended to clear the question field.
-     * <p/>
-     * <strong>Note: </strong> it seems like this command isn't really used.
-     */
-    void onClearQuestion();
-
-    /**
      * Called when new question should be displayed. Command:
      * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_QUESTION}</code>.
      *
      * @param question the question that should be displayed
      */
     void onQuestion(String question);
+
+    /**
+     * Called after timeout for answering the question. Contains the "template" correct answer.
+     * Command: <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CORRECT_ANSWER}</code>.
+     *
+     * @param answer the correct answer
+     */
+    void onCorrectAnswer(String answer);
 
     /**
      * Called when new message should be displayed. The kind of the message may be various:
@@ -33,22 +33,6 @@ public interface JPKSCommandListener {
     void onMessage(String message);
 
     /**
-     * Called after timeout for answering the question. Contains the "template" correct answer.
-     * Command: <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_ANSWER}</code>.
-     *
-     * @param answer the correct answer
-     */
-    void onCorrectAnswer(String answer);
-
-    /**
-     * Called after each tick of next-question-counter. Command:
-     * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_COUNT}</code>.
-     *
-     * @param countVal current amount of seconds remaining to display the new question
-     */
-    void onCount(String countVal);
-
-    /**
      * Called when the name of the image that is going to be displayed is sent. Command:
      * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_IMAGE}</code>.
      * <p/>
@@ -59,6 +43,14 @@ public interface JPKSCommandListener {
      * @param imageURL filename of the image to download
      */
     void onImageSent(String imageURL);
+
+    /**
+     * Called after each tick of next-question-counter. Command:
+     * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_COUNT}</code>.
+     *
+     * @param countVal current amount of seconds remaining to display the new question
+     */
+    void onCount(String countVal);
 
     /**
      * Called when the TOP10 ranking should be cleared. Calling this method is usually followed
@@ -91,4 +83,12 @@ public interface JPKSCommandListener {
      * <strong>Note: </strong> it seems like this command isn't really used.
      */
     void onRepaint();
+
+    /**
+     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR}</code> command is
+     * sent. The client is intended to clear the question field.
+     * <p/>
+     * <strong>Note: </strong> it seems like this command isn't really used.
+     */
+    void onClearQuestion();
 }
