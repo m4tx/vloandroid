@@ -7,6 +7,12 @@ package pl.krakow.vlo.jpks;
  */
 public interface JPKSCommandListener {
     /**
+     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR}</code> command is
+     * sent. The client is intended to clear the question field.
+     */
+    void onClearQuestion();
+
+    /**
      * Called when new question should be displayed. Command:
      * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_QUESTION}</code>.
      *
@@ -83,12 +89,4 @@ public interface JPKSCommandListener {
      * <strong>Note: </strong> it seems like this command isn't really used.
      */
     void onRepaint();
-
-    /**
-     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR}</code> command is
-     * sent. The client is intended to clear the question field.
-     * <p/>
-     * <strong>Note: </strong> it seems like this command isn't really used.
-     */
-    void onClearQuestion();
 }

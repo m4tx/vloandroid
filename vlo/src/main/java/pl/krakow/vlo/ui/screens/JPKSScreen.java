@@ -33,7 +33,7 @@ public class JPKSScreen extends Fragment implements Screen {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... arg) {
-                new JPKSClient();
+                new JPKSClient("android");
                 return null;
             }
         }.execute();

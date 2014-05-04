@@ -24,6 +24,7 @@ public class JPKSClient {
 
     private static final String COMMAND_LOGIN = "log";
     private static final String COMMAND_ANSWER = "ans";
+    private static final String COMMAND_CLEAR = "cle";
     private static final String COMMAND_QUESTION = "que";
     private static final String COMMAND_CORRECT_ANSWER = "lib";
     private static final String COMMAND_MESSAGE = "txt";
@@ -33,7 +34,6 @@ public class JPKSClient {
     private static final String COMMAND_APPEND_RANKING = "rnk";
     private static final String COMMAND_POINT_GOT = "pkt";
     private static final String COMMAND_REPAINT = "rep";
-    private static final String COMMAND_CLEAR = "cle";
 
     private static JPKSClient instance;
 
@@ -48,11 +48,14 @@ public class JPKSClient {
      */
     public JPKSClient(String nickname) {
         try {
+            Log.v(LOGGER_TAG, "Trying to connect to JPKS: " + HOSTNAME + ":" + PORT);
             Socket sock = new Socket();
             sock.connect(new InetSocketAddress(HOSTNAME, PORT), TIMEOUT);
             reader = new BufferedReader(new InputStreamReader(sock.getInputStream
                     ()));
             writer = new PrintWriter(sock.getOutputStream(), true);
+            Log.v(LOGGER_TAG, "Successfully connected! Sending request to log in: " +
+                    COMMAND_LOGIN + nickname);
             writer.println(COMMAND_LOGIN + nickname);
 
             new Session().start();
@@ -73,7 +76,9 @@ public class JPKSClient {
      */
     public void sendAnswer(String answer) {
         assert answer.length() >= 0 && answer.length() <= 60;
-        writer.println(COMMAND_ANSWER + JPKSStringCoder.encodeString(answer));
+        String toSend = COMMAND_ANSWER + JPKSStringCoder.encodeString(answer);
+        Log.v(LOGGER_TAG, "Sending message: " + toSend);
+        writer.println(toSend);
     }
 
     /**
@@ -106,6 +111,9 @@ public class JPKSClient {
             }
 
             switch (command.substring(0, 3)) {
+                case COMMAND_CLEAR:
+                    commandListener.onClearQuestion();
+                    break;
                 case COMMAND_QUESTION:
                     commandListener.onQuestion(command.substring(3));
                     break;
@@ -132,9 +140,6 @@ public class JPKSClient {
                     break;
                 case COMMAND_REPAINT:
                     commandListener.onRepaint();
-                    break;
-                case COMMAND_CLEAR:
-                    commandListener.onClearQuestion();
                     break;
                 default:
                     Log.w(LOGGER_TAG, "Unrecognized response from server: \"" + command + "\"");
