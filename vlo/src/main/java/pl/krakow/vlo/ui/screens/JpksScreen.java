@@ -4,12 +4,17 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
+import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import pl.krakow.vlo.R;
@@ -35,8 +40,32 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_jpks, container, false);
-        TextView tv = (TextView) view.findViewById(R.id.messageTextView);
-        tv.setMovementMethod(new ScrollingMovementMethod());
+
+        final ImageButton sendButton = (ImageButton) view.findViewById(R.id.sendButton);
+        sendButton.setEnabled(false);
+        final EditText messageEditText = (EditText) view.findViewById(R.id.messageEditText);
+        messageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                sendButton.setEnabled(s.length() > 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JpksClient.getInstance().sendAnswer(messageEditText.getText().toString());
+                messageEditText.setText("");
+            }
+        });
+
         return view;
     }
 
@@ -53,6 +82,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener 
         } else {
             JpksClient.getInstance().setCommandListener(this);
         }
+
         super.onCreate(savedInstanceState);
     }
 
@@ -78,6 +108,9 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener 
     private void setMessages(String messages) {
         TextView tv = (TextView) getView().findViewById(R.id.messageTextView);
         tv.setText(messages);
+
+        ScrollView tvScrollView = (ScrollView) getView().findViewById(R.id.messageScrollView);
+        tvScrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
