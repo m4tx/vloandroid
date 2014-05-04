@@ -16,6 +16,12 @@ import java.net.Socket;
  * @see <a href="http://users.v-lo.krakow.pl/~dyrek/jpks/">JPKS Homepage</a>
  */
 public class JPKSClient {
+    /**
+     * Prefix used in addition to the filename passed by
+     * {@link pl.krakow.vlo.jpks.JPKSCommandListener#onImageSent(String)} method to download image.
+     */
+    public static final String IMAGE_URL_PREFIX = "http://users.v-lo.krakow.pl/~dyrek/jpks/img/";
+
     private static final String LOGGER_TAG = "JPKSClient";
 
     private static final String HOSTNAME = "users.v-lo.krakow.pl";
@@ -35,6 +41,9 @@ public class JPKSClient {
     private static final String COMMAND_POINT_GOT = "pkt";
     private static final String COMMAND_REPAINT = "rep";
 
+    /**
+     * Instance of the client that is kept even when the JPKS activity/fragment is closed.
+     */
     private static JPKSClient instance;
 
     private BufferedReader reader;
@@ -58,7 +67,7 @@ public class JPKSClient {
                     COMMAND_LOGIN + nickname);
             writer.println(COMMAND_LOGIN + nickname);
 
-            new Session().start();
+            new CommandListenerThread().start();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -91,7 +100,12 @@ public class JPKSClient {
         this.commandListener = commandListener;
     }
 
-    private class Session extends Thread {
+    /**
+     * The thread that listens for commands from the server and passes them to proper
+     * {@link pl.krakow.vlo.jpks.JPKSCommandListener} set by
+     * {@link #setCommandListener(JPKSCommandListener)} method.
+     */
+    private class CommandListenerThread extends Thread {
         @Override
         public void run() {
             String line;
@@ -104,6 +118,15 @@ public class JPKSClient {
             }
         }
 
+        /**
+         * Processes the command from the server (i.e. passes it to the
+         * {@link pl.krakow.vlo.jpks.JPKSCommandListener}). Does nothing (except logging) when no
+         * CommandListener is set.
+         *
+         * @param command the command sent by server. Please note that it should be already
+         *                decoded string via the
+         *                {@link pl.krakow.vlo.jpks.JPKSStringCoder#decodeString(String)} method.
+         */
         private void processCommand(String command) {
             Log.v(LOGGER_TAG, "Processing command from server: \"" + command + "\"");
             if (commandListener == null) {
