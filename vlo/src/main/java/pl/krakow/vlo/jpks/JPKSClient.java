@@ -16,8 +16,7 @@ public class JPKSClient {
     private static final int TIMEOUT = 1000;
 
     private static final String COMMAND_LOGIN = "log";
-    private static final String COMMAND_CLEAR1 = "cle";
-    private static final String COMMAND_CLEAR2 = "rep";
+    private static final String COMMAND_CLEAR = "cle";
     private static final String COMMAND_QUESTION = "que";
     private static final String COMMAND_MESSAGE = "txt";
     private static final String COMMAND_ANSWER = "lib";
@@ -74,8 +73,27 @@ public class JPKSClient {
         }
 
         private void processCommand(String command) {
-            switch(command.substring(0, 3)) {
-                // not yet implemented
+            switch (command.substring(0, 3)) {
+                case COMMAND_CLEAR:
+                    break;
+                case COMMAND_QUESTION:
+                    break;
+                case COMMAND_MESSAGE:
+                    break;
+                case COMMAND_ANSWER:
+                    break;
+                case COMMAND_COUNT:
+                    break;
+                case COMMAND_IMAGE:
+                    break;
+                case COMMAND_CLEAR_RANKING:
+                    break;
+                case COMMAND_APPEND_RANKING:
+                    break;
+                case COMMAND_POINT_GOT:
+                    break;
+                case COMMAND_REPAINT:
+                    break;
             }
         }
     }

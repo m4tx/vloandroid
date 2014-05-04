@@ -7,9 +7,8 @@ package pl.krakow.vlo.jpks;
  */
 public interface JPKSCommandListener {
     /**
-     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR1}</code> or
-     * <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR2}</code> command is sent. The
-     * client is intended to clear the question field.
+     * Called when <code>{@value pl.krakow.vlo.jpks.JPKSClient#COMMAND_CLEAR1}</code> command is
+     * sent. The client is intended to clear the question field.
      * <p/>
      * <strong>Note: </strong> it seems like this command isn't really used.
      */
