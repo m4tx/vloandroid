@@ -126,12 +126,16 @@ public class JpksClient extends BaseJpksClient {
             case COMMAND_CLEAR:
                 question = "";
                 correctAnswer = "";
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onClearQuestion();
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (commandListener != null) {
+                                commandListener.onClearQuestion();
+                            }
+                        }
+                    });
+                }
                 break;
             case COMMAND_QUESTION:
                 question = additionalData;
@@ -140,51 +144,61 @@ public class JpksClient extends BaseJpksClient {
                     image = nextImage;
                     nextImage = null;
                 }
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onQuestion(additionalData, image);
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onQuestion(additionalData, image);
+                        }
+                    });
+                }
                 break;
             case COMMAND_CORRECT_ANSWER:
                 correctAnswer = additionalData;
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onCorrectAnswer(additionalData);
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onCorrectAnswer(additionalData);
+                        }
+                    });
+                }
                 break;
             case COMMAND_MESSAGE:
                 messages += additionalData + '\n';
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onMessage(messages);
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onMessage(messages);
+                        }
+                    });
+                }
                 break;
             case COMMAND_IMAGE:
                 new ImageDownloadTask().execute(additionalData);
                 break;
             case COMMAND_COUNT:
                 counter = Integer.parseInt(additionalData);
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onCount(counter);
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onCount(counter);
+                        }
+                    });
+                }
                 break;
             case COMMAND_CLEAR_RANKING:
                 ranking.clear();
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onClearRanking();
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onClearRanking();
+                        }
+                    });
+                }
                 break;
             case COMMAND_APPEND_RANKING:
                 Matcher matcher = RANKING_PATTERN.matcher(additionalData);
@@ -195,24 +209,35 @@ public class JpksClient extends BaseJpksClient {
                     int points = Integer.parseInt(matcher.group(3));
                     final RankingItem item = new RankingItem(position, username, points);
                     ranking.add(item);
+                    if (commandListener != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                commandListener.onAppendToRanking(item);
+                            }
+                        });
+                    }
+                }
+                break;
+            case COMMAND_POINT_GOT:
+                if (commandListener != null) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            commandListener.onAppendToRanking(item);
+                            commandListener.onPointGot(additionalData);
                         }
                     });
                 }
                 break;
-            case COMMAND_POINT_GOT:
-                commandListener.onPointGot(command.substring(3));
-                break;
             case COMMAND_REPAINT:
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        commandListener.onRepaint();
-                    }
-                });
+                if (commandListener != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            commandListener.onRepaint();
+                        }
+                    });
+                }
                 break;
             default:
                 Log.w(LOGGER_TAG, "Unrecognized response from server: \"" + command + "\"");
