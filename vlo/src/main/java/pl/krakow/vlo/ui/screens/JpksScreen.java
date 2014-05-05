@@ -20,6 +20,9 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.jpks.JpksClient;
 import pl.krakow.vlo.jpks.JpksCommandListener;
@@ -29,14 +32,24 @@ import pl.krakow.vlo.ui.EmptyTabContentFactory;
  * Created by m4tx3 on 5/3/14.
  */
 public class JpksScreen extends Fragment implements Screen, JpksCommandListener, TabHost
-        .OnTabChangeListener {
+        .OnTabChangeListener, ViewPager.OnPageChangeListener {
     private static final String TAG_GAME = "game";
-    private static final String TAG_TOP10 = "top10";
+    private static final String TAG_RANKING = "ranking";
+    private static final int GAME_POS = 0;
+    private static final int RANKING_POS = 1;
 
     class JpksPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View v = createGameView(container);
+            View v = null;
+            switch (position) {
+                case GAME_POS:
+                    v = createGameView(container);
+                    break;
+                case RANKING_POS:
+                    v = createRankingView(container);
+                    break;
+            }
             container.addView(v);
             return v;
         }
@@ -48,7 +61,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -77,14 +90,14 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
         tabHost.setup();
         tabHost.addTab(tabHost.newTabSpec(TAG_GAME).setIndicator("Game").setContent(new
                 EmptyTabContentFactory(getActivity())));
-        tabHost.addTab(tabHost.newTabSpec(TAG_TOP10).setIndicator("TOP10").setContent(new
+        tabHost.addTab(tabHost.newTabSpec(TAG_RANKING).setIndicator("TOP10").setContent(new
                 EmptyTabContentFactory(getActivity())));
         tabHost.setOnTabChangedListener(this);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new JpksPagerAdapter());
-
-
+        viewPager.setCurrentItem(0);
+        viewPager.setOnPageChangeListener(this);
 
         return view;
     }
@@ -117,6 +130,13 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
                 messageEditText.setText("");
             }
         });
+
+        return view;
+    }
+
+    private View createRankingView(ViewGroup container) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_jpks_ranking,
+                container, false);
 
         return view;
     }
@@ -214,6 +234,30 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
     @Override
     public void onTabChanged(String s) {
+        int pos = 0;
+        switch (s) {
+            case TAG_GAME:
+                pos = 0;
+                break;
+            case TAG_RANKING:
+                pos = 1;
+                break;
+        }
+        ViewPager viewPager = (ViewPager) getView().findViewById(R.id.viewPager);
+        viewPager.setCurrentItem(pos);
+    }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        TabHost tabHost = (TabHost) getView().findViewById(R.id.tabHost);
+        tabHost.setCurrentTab(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
     }
 }
