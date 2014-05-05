@@ -54,7 +54,9 @@
             android:layout_height="match_parent"
             android:id="@+id/messageEditText"
             android:layout_weight="1"
-            android:hint="Send answer"/>
+            android:hint="Send answer"
+            android:inputType="text"
+            android:imeOptions="actionSend"/>
 
         <ImageButton
             android:layout_width="wrap_content"

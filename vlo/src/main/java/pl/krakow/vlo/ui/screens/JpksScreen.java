@@ -9,9 +9,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -139,11 +141,20 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
             public void afterTextChanged(Editable s) {
             }
         });
+        messageEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    sendMessage();
+                    return true;
+                }
+                return false;
+            }
+        });
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JpksClient.getInstance().sendAnswer(messageEditText.getText().toString());
-                messageEditText.setText("");
+                sendMessage();
             }
         });
 
@@ -170,6 +181,14 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
         }
 
         return view;
+    }
+
+    private void sendMessage() {
+        EditText messageEditText = (EditText) gameView.findViewById(R.id.messageEditText);
+        if (messageEditText.getText().toString().length() > 0) {
+            jpksClient.sendAnswer(messageEditText.getText().toString());
+            messageEditText.setText("");
+        }
     }
 
     private View createRankingView(ViewGroup container, Bundle savedInstanceState) {
