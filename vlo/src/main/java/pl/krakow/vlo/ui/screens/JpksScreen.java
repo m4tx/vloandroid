@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,16 +17,46 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.jpks.JpksClient;
 import pl.krakow.vlo.jpks.JpksCommandListener;
+import pl.krakow.vlo.ui.EmptyTabContentFactory;
 
 /**
  * Created by m4tx3 on 5/3/14.
  */
-public class JpksScreen extends Fragment implements Screen, JpksCommandListener {
+public class JpksScreen extends Fragment implements Screen, JpksCommandListener, TabHost
+        .OnTabChangeListener {
+    private static final String TAG_GAME = "game";
+    private static final String TAG_TOP10 = "top10";
+
+    class JpksPagerAdapter extends PagerAdapter {
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View v = createGameView(container);
+            container.addView(v);
+            return v;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return true;
+        }
+    }
+
     @Override
     public int getNameResId() {
         return R.string.screen_jpks_title;
@@ -40,6 +72,26 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_jpks, container, false);
+
+        TabHost tabHost = (TabHost) view.findViewById(R.id.tabHost);
+        tabHost.setup();
+        tabHost.addTab(tabHost.newTabSpec(TAG_GAME).setIndicator("Game").setContent(new
+                EmptyTabContentFactory(getActivity())));
+        tabHost.addTab(tabHost.newTabSpec(TAG_TOP10).setIndicator("TOP10").setContent(new
+                EmptyTabContentFactory(getActivity())));
+        tabHost.setOnTabChangedListener(this);
+
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        viewPager.setAdapter(new JpksPagerAdapter());
+
+
+
+        return view;
+    }
+
+    private View createGameView(ViewGroup container) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_jpks_game,
+                container, false);
 
         final ImageButton sendButton = (ImageButton) view.findViewById(R.id.sendButton);
         sendButton.setEnabled(false);
@@ -157,6 +209,11 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener 
 
     @Override
     public void onRepaint() {
+
+    }
+
+    @Override
+    public void onTabChanged(String s) {
 
     }
 }
