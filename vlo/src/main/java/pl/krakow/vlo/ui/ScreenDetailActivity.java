@@ -61,7 +61,6 @@ public class ScreenDetailActivity extends FragmentActivity {
     private Screen getScreen() {
         return Screens.getScreens().get(getIntent().getIntExtra(ScreenListActivity
                 .ARG_ITEM_POS, -1));
-
     }
 
     @Override
