@@ -1,10 +1,13 @@
 package pl.krakow.vlo.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.util.AttributeSet;
 import android.view.MenuItem;
+import android.view.View;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.ui.screens.Screen;
@@ -15,7 +18,7 @@ import pl.krakow.vlo.ui.screens.Screens;
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link ScreenListActivity}.
- * <p>
+ * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a currently chosen Screen.
  */
@@ -41,14 +44,24 @@ public class ScreenDetailActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Screen screen = Screens.getScreens().get(getIntent().getIntExtra(ScreenListActivity
-                    .ARG_ITEM_POS, -1));
+            Screen screen = getScreen();
             assert screen instanceof Fragment; // Every clickable Screen should be a Fragment
-            setTitle(screen.getNameResId());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.screen_detail_container, (Fragment) screen)
                     .commit();
         }
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        setTitle(getScreen().getNameResId());
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+    private Screen getScreen() {
+        return Screens.getScreens().get(getIntent().getIntExtra(ScreenListActivity
+                .ARG_ITEM_POS, -1));
+
     }
 
     @Override
