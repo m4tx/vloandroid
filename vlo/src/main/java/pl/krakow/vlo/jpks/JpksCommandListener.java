@@ -61,9 +61,9 @@ public interface JpksCommandListener {
      * Called when the new line of ranking is sent. Usually called multiple times at once.
      * Command: <code>{@value BaseJpksClient#COMMAND_APPEND_RANKING}</code>.
      *
-     * @param ranking current full ranking
+     * @param item received ranking item
      */
-    void onAppendToRanking(String ranking);
+    void onAppendToRanking(JpksClient.RankingItem item);
 
     /**
      * Called when some player gets the point. The command is

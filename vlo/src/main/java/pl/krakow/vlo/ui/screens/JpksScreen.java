@@ -218,7 +218,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
     }
 
     @Override
-    public void onAppendToRanking(String ranking) {
+    public void onAppendToRanking(JpksClient.RankingItem item) {
 
     }
 
