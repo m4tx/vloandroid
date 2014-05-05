@@ -72,17 +72,13 @@ public class JpksClient extends BaseJpksClient {
     private ArrayList<RankingItem> ranking = new ArrayList<>();
     private int counter;
     private Bitmap image;
+    private Bitmap nextImage;
 
     /**
-     * Constructor that connects and logs into the JPKS server.
-     *
-     * @param nickname user's nickname
      * @param activity the Activity this client is created in
      */
-    public JpksClient(String nickname, Activity activity) {
-        super(nickname);
+    public JpksClient(Activity activity) {
         this.activity = activity;
-
         instance = this;
     }
 
@@ -140,6 +136,10 @@ public class JpksClient extends BaseJpksClient {
             case COMMAND_QUESTION:
                 question = additionalData;
                 correctAnswer = "";
+                if (nextImage != null) {
+                    image = nextImage;
+                    nextImage = null;
+                }
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -236,7 +236,7 @@ public class JpksClient extends BaseJpksClient {
                 urlConnection.disconnect();
             }
 
-            JpksClient.this.image = bitmap;
+            JpksClient.this.nextImage = bitmap;
             return null;
         }
     }

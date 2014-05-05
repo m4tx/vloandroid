@@ -2,17 +2,16 @@ package pl.krakow.vlo.ui.screens;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,9 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import pl.krakow.vlo.R;
 import pl.krakow.vlo.jpks.JpksClient;
@@ -40,21 +36,31 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
     private static final String TAG_RANKING = "ranking";
     private static final int GAME_POS = 0;
     private static final int RANKING_POS = 1;
+    private static final String KEY_CURRENT_MESSAGE = "currentMessage";
+    private static final String KEY_MESSAGE_EDIT_TEXT_STATE = "messageEditTextState";
+    private static final String KEY_MESSAGE_VIEW_SCROLL = "messageViewScroll";
+    private static final String KEY_RANKING_VIEW_SCROLL = "rankingViewScroll";
 
     private JpksClient jpksClient;
     private View gameView;
     private View rankingView;
 
     class JpksPagerAdapter extends PagerAdapter {
+        private final Bundle savedInstanceState;
+
+        JpksPagerAdapter(Bundle savedInstanceState) {
+            this.savedInstanceState = savedInstanceState;
+        }
+
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View v = null;
             switch (position) {
                 case GAME_POS:
-                    v = (gameView = createGameView(container));
+                    v = (gameView = createGameView(container, savedInstanceState));
                     break;
                 case RANKING_POS:
-                    v = (rankingView = createRankingView(container));
+                    v = (rankingView = createRankingView(container, savedInstanceState));
                     break;
             }
             container.addView(v);
@@ -102,20 +108,23 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
         tabHost.setOnTabChangedListener(this);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new JpksPagerAdapter());
+        viewPager.setAdapter(new JpksPagerAdapter(savedInstanceState));
         viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(this);
+
+        jpksClient.setCommandListener(JpksScreen.this);
 
         return view;
     }
 
-    private View createGameView(ViewGroup container) {
+    private View createGameView(ViewGroup container, Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_jpks_game,
                 container, false);
 
         final ImageButton sendButton = (ImageButton) view.findViewById(R.id.sendButton);
         sendButton.setEnabled(false);
         final EditText messageEditText = (EditText) view.findViewById(R.id.messageEditText);
+
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -138,10 +147,32 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
             }
         });
 
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+        if (jpksClient.getImage() != null) {
+            imageView.setImageBitmap(jpksClient.getImage());
+        }
+        TextView messageView = (TextView) view.findViewById(R.id.messageTextView);
+        messageView.setText(jpksClient.getMessages());
+        TextView questionView = (TextView) view.findViewById(R.id.questionTextView);
+        questionView.setText(jpksClient.getQuestion());
+        ProgressBar questionProgress = (ProgressBar) view.findViewById(R.id.questionProgress);
+        questionProgress.setProgress((10 - jpksClient.getCounter()) * 10);
+
+        if (savedInstanceState != null) {
+            messageEditText.setText(savedInstanceState.getString(KEY_CURRENT_MESSAGE));
+            messageEditText.onRestoreInstanceState(savedInstanceState.getParcelable
+                    (KEY_MESSAGE_EDIT_TEXT_STATE));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                ScrollView messageScrollView = (ScrollView) view.findViewById(R.id
+                        .messageScrollView);
+                messageScrollView.setScrollY(savedInstanceState.getInt(KEY_MESSAGE_VIEW_SCROLL));
+            }
+        }
+
         return view;
     }
 
-    private View createRankingView(ViewGroup container) {
+    private View createRankingView(ViewGroup container, Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_jpks_ranking,
                 container, false);
 
@@ -149,11 +180,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
         lv.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                if (jpksClient == null) {
-                    return 0;
-                } else {
-                    return jpksClient.getRanking().size();
-                }
+                return jpksClient.getRanking().size();
             }
 
             @Override
@@ -187,6 +214,11 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
                 return view;
             }
         });
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                lv.setScrollY(savedInstanceState.getInt(KEY_RANKING_VIEW_SCROLL));
+            }
+        }
 
         return view;
     }
@@ -194,28 +226,38 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (JpksClient.getInstance() == null) {
+            jpksClient = new JpksClient(getActivity());
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... arg) {
-                    jpksClient = new JpksClient("android", getActivity());
-                    jpksClient.setCommandListener(JpksScreen.this);
+                    jpksClient.connect("android");
                     return null;
                 }
             }.execute();
         } else {
             jpksClient = JpksClient.getInstance();
-            jpksClient.setCommandListener(this);
         }
 
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onDestroy() {
-        if (jpksClient != null) {
-            jpksClient.setCommandListener(null);
-        }
-        super.onDestroy();
+    public void onSaveInstanceState(Bundle outState) {
+        EditText messageEditText = (EditText) gameView.findViewById(R.id.messageEditText);
+        outState.putString(KEY_CURRENT_MESSAGE, messageEditText.getText().toString());
+        outState.putParcelable(KEY_MESSAGE_EDIT_TEXT_STATE, messageEditText.onSaveInstanceState());
+        ScrollView messageScrollView = (ScrollView) gameView.findViewById(R.id.messageScrollView);
+        outState.putInt(KEY_MESSAGE_VIEW_SCROLL, messageScrollView.getScrollY());
+        ListView rankingListView = (ListView) rankingView.findViewById(R.id.listView);
+        outState.putInt(KEY_RANKING_VIEW_SCROLL, rankingListView.getScrollY());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        jpksClient.setCommandListener(null);
+        super.onDestroyView();
     }
 
     private void setQuestionText(String text) {

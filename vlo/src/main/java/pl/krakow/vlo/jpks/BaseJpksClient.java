@@ -44,11 +44,11 @@ public abstract class BaseJpksClient {
     private PrintWriter writer;
 
     /**
-     * Constructor that connects and logs into the JPKS server.
+     * Connects and logs into the JPKS server.
      *
      * @param nickname user's nickname
      */
-    public BaseJpksClient(String nickname) {
+    public void connect(String nickname) {
         try {
             Log.v(LOGGER_TAG, "Trying to connect to JPKS: " + HOSTNAME + ":" + PORT);
             Socket sock = new Socket();
