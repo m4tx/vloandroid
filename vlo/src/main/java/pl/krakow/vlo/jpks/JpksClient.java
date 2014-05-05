@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,6 +66,7 @@ public class JpksClient extends BaseJpksClient {
 
     private Activity activity;
     private JpksCommandListener commandListener;
+    private ImageDownloadTask imageDownloadTask;
 
     private String question;
     private String correctAnswer;
@@ -176,7 +178,12 @@ public class JpksClient extends BaseJpksClient {
                 }
                 break;
             case COMMAND_IMAGE:
-                new ImageDownloadTask().execute(additionalData);
+                if (imageDownloadTask != null && imageDownloadTask.getStatus() == AsyncTask.Status
+                        .RUNNING) {
+                    imageDownloadTask.cancel(false);
+                }
+                imageDownloadTask = new ImageDownloadTask();
+                imageDownloadTask.execute(additionalData);
                 break;
             case COMMAND_COUNT:
                 counter = Integer.parseInt(additionalData);
@@ -231,12 +238,21 @@ public class JpksClient extends BaseJpksClient {
                 break;
             case COMMAND_REPAINT:
                 if (commandListener != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            commandListener.onRepaint();
+                    if (imageDownloadTask != null && imageDownloadTask.getStatus() == AsyncTask
+                            .Status.RUNNING) {
+                        imageDownloadTask.setShouldFireRepaint();
+                    } else {
+                        if (nextImage != null) {
+                            image = nextImage;
+                            nextImage = null;
                         }
-                    });
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                commandListener.onRepaint(image);
+                            }
+                        });
+                    }
                 }
                 break;
             default:
@@ -245,6 +261,8 @@ public class JpksClient extends BaseJpksClient {
     }
 
     private class ImageDownloadTask extends AsyncTask<String, Void, Void> {
+        private volatile boolean shouldFireRepaint = false;
+
         @Override
         protected Void doInBackground(String... imgName) {
             HttpURLConnection urlConnection = null;
@@ -261,8 +279,23 @@ public class JpksClient extends BaseJpksClient {
                 urlConnection.disconnect();
             }
 
-            JpksClient.this.nextImage = bitmap;
+            if (shouldFireRepaint && commandListener != null) {
+                JpksClient.this.image = bitmap;
+                JpksClient.this.nextImage = null;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        commandListener.onRepaint(JpksClient.this.image);
+                    }
+                });
+            } else {
+                JpksClient.this.nextImage = bitmap;
+            }
             return null;
+        }
+
+        public void setShouldFireRepaint() {
+            shouldFireRepaint = true;
         }
     }
 }

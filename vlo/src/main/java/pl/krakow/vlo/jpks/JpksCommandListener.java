@@ -76,6 +76,8 @@ public interface JpksCommandListener {
     /**
      * Called when the image is intended to be repainted (and made visible if it is not already).
      * The command is: <code>{@value BaseJpksClient#COMMAND_REPAINT}</code>.
+     *
+     * @param image the image to display
      */
-    void onRepaint();
+    void onRepaint(Bitmap image);
 }

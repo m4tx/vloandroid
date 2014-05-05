@@ -322,8 +322,8 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
     }
 
     @Override
-    public void onRepaint() {
-
+    public void onRepaint(Bitmap image) {
+        setImage(image);
     }
 
     @Override
