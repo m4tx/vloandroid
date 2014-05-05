@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ public class JpksClient extends BaseJpksClient {
     private String question;
     private String correctAnswer;
     private String messages = "";
-    private String ranking;
+    private ArrayList<RankingItem> ranking = new ArrayList<>();
     private int counter;
     private Bitmap image;
 
@@ -97,6 +98,30 @@ public class JpksClient extends BaseJpksClient {
 
     public static JpksClient getInstance() {
         return instance;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public String getMessages() {
+        return messages;
+    }
+
+    public ArrayList<RankingItem> getRanking() {
+        return ranking;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override
@@ -153,7 +178,7 @@ public class JpksClient extends BaseJpksClient {
                 });
                 break;
             case COMMAND_CLEAR_RANKING:
-                ranking = "";
+                ranking.clear();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -162,7 +187,6 @@ public class JpksClient extends BaseJpksClient {
                 });
                 break;
             case COMMAND_APPEND_RANKING:
-                ranking += additionalData + '\n';
                 Matcher matcher = RANKING_PATTERN.matcher(additionalData);
                 boolean found = matcher.find();
                 if (found) {
@@ -170,6 +194,7 @@ public class JpksClient extends BaseJpksClient {
                     String username = matcher.group(2);
                     int points = Integer.parseInt(matcher.group(3));
                     final RankingItem item = new RankingItem(position, username, points);
+                    ranking.add(item);
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

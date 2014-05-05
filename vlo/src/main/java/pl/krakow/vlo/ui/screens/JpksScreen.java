@@ -12,9 +12,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TabHost;
@@ -38,16 +41,20 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
     private static final int GAME_POS = 0;
     private static final int RANKING_POS = 1;
 
+    private JpksClient jpksClient;
+    private View gameView;
+    private View rankingView;
+
     class JpksPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View v = null;
             switch (position) {
                 case GAME_POS:
-                    v = createGameView(container);
+                    v = (gameView = createGameView(container));
                     break;
                 case RANKING_POS:
-                    v = createRankingView(container);
+                    v = (rankingView = createRankingView(container));
                     break;
             }
             container.addView(v);
@@ -66,7 +73,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return true;
+            return view == object;
         }
     }
 
@@ -138,6 +145,49 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_jpks_ranking,
                 container, false);
 
+        ListView lv = (ListView) view.findViewById(R.id.listView);
+        lv.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                if (jpksClient == null) {
+                    return 0;
+                } else {
+                    return jpksClient.getRanking().size();
+                }
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return jpksClient.getRanking().get(i);
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return i;
+            }
+
+            @Override
+            public boolean isEnabled(int position) {
+                return false;
+            }
+
+            @Override
+            public View getView(int position, View view, ViewGroup parent) {
+                if (view == null) {
+                    view = getActivity().getLayoutInflater().inflate(R.layout
+                            .fragment_jpks_ranking_list_item, parent, false);
+                }
+                JpksClient.RankingItem item = (JpksClient.RankingItem) getItem(position);
+                TextView positionView = (TextView) view.findViewById(R.id.userPosition);
+                positionView.setText(item.getPosition() + ".");
+                TextView usernameView = (TextView) view.findViewById(R.id.username);
+                usernameView.setText(item.getUsername());
+                TextView pointsView = (TextView) view.findViewById(R.id.pointsCount);
+                pointsView.setText(Integer.toString(item.getPoints()));
+                return view;
+            }
+        });
+
         return view;
     }
 
@@ -147,12 +197,14 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... arg) {
-                    new JpksClient("android", getActivity()).setCommandListener(JpksScreen.this);
+                    jpksClient = new JpksClient("android", getActivity());
+                    jpksClient.setCommandListener(JpksScreen.this);
                     return null;
                 }
             }.execute();
         } else {
-            JpksClient.getInstance().setCommandListener(this);
+            jpksClient = JpksClient.getInstance();
+            jpksClient.setCommandListener(this);
         }
 
         super.onCreate(savedInstanceState);
@@ -160,28 +212,27 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
     @Override
     public void onDestroy() {
-        JpksClient client = JpksClient.getInstance();
-        if (client != null) {
-            client.setCommandListener(null);
+        if (jpksClient != null) {
+            jpksClient.setCommandListener(null);
         }
         super.onDestroy();
     }
 
     private void setQuestionText(String text) {
-        TextView tv = (TextView) getView().findViewById(R.id.questionTextView);
+        TextView tv = (TextView) gameView.findViewById(R.id.questionTextView);
         tv.setText(text);
     }
 
     private void setImage(Bitmap image) {
-        ImageView view = (ImageView) getView().findViewById(R.id.imageView);
+        ImageView view = (ImageView) gameView.findViewById(R.id.imageView);
         view.setImageBitmap(image);
     }
 
     private void setMessages(String messages) {
-        TextView tv = (TextView) getView().findViewById(R.id.messageTextView);
+        TextView tv = (TextView) gameView.findViewById(R.id.messageTextView);
         tv.setText(messages);
 
-        ScrollView tvScrollView = (ScrollView) getView().findViewById(R.id.messageScrollView);
+        ScrollView tvScrollView = (ScrollView) gameView.findViewById(R.id.messageScrollView);
         tvScrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
@@ -208,7 +259,7 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
     @Override
     public void onCount(int countVal) {
-        ProgressBar progress = (ProgressBar) getView().findViewById(R.id.questionProgress);
+        ProgressBar progress = (ProgressBar) gameView.findViewById(R.id.questionProgress);
         progress.setProgress((10 - countVal) * 10);
     }
 
@@ -219,7 +270,8 @@ public class JpksScreen extends Fragment implements Screen, JpksCommandListener,
 
     @Override
     public void onAppendToRanking(JpksClient.RankingItem item) {
-
+        ListView lv = (ListView) rankingView.findViewById(R.id.listView);
+        ((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
     }
 
     @Override
